@@ -1,4 +1,4 @@
-package worker
+package main
 
 import (
 	"log"
@@ -6,7 +6,7 @@ import (
 )
 
 type Task interface {
-	Process() error
+	Process(workerId int) error
 }
 
 type Worker struct {
@@ -29,7 +29,7 @@ func (w *Worker) Start() {
 		go func(i int) {
 			log.Printf("Launching worker #%v\n", i)
 			for t := range w.jobs {
-				t.Process()
+				t.Process(i)
 			}
 			w.wg.Done()
 			log.Printf("Shutting down worker #%v\n", i)
